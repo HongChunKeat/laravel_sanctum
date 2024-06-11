@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace app\model\logic;
 
 # library
-use support\Log;
-use support\Request;
-use support\Db;
-use support\Redis;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Log;
 use GatewayWorker\Lib\Gateway;
 # database & logic
 use app\model\database\LogApiModel;
@@ -481,35 +481,35 @@ final class HelperLogic
     }
 
     # websocket
-    public static function websocketSendToClient($uid, $type, $data)
-    {
-        $clientId = Redis::get("ws_{$uid}_client_id");
+    // public static function websocketSendToClient($uid, $type, $data)
+    // {
+    //     $clientId = Redis::get("ws_{$uid}_client_id");
 
-        if (!empty($clientId)) {
-            Gateway::sendToClient($clientId, json_encode([
-                "type" => $type,
-                "data" => $data
-            ]));
-        }
-    }
+    //     if (!empty($clientId)) {
+    //         Gateway::sendToClient($clientId, json_encode([
+    //             "type" => $type,
+    //             "data" => $data
+    //         ]));
+    //     }
+    // }
 
-    public static function websocketSendToAll($type, $data)
-    {
-        Gateway::sendToAll(json_encode([
-            "type" => $type,
-            "data" => $data
-        ]));
-    }
+    // public static function websocketSendToAll($type, $data)
+    // {
+    //     Gateway::sendToAll(json_encode([
+    //         "type" => $type,
+    //         "data" => $data
+    //     ]));
+    // }
 
-    public static function websocketDestroy($uid)
-    {
-        // delete old connection record in redis and websocket connection by fetching old client id first then delete both
-        $oldClientId = Redis::get("ws_{$uid}_client_id");
+    // public static function websocketDestroy($uid)
+    // {
+    //     // delete old connection record in redis and websocket connection by fetching old client id first then delete both
+    //     $oldClientId = Redis::get("ws_{$uid}_client_id");
 
-        Redis::del("ws_{$uid}_client_id");
-        if (!empty($oldClientId)) {
-            Gateway::destoryClient($oldClientId);
-            Redis::del("ws_{$oldClientId}_uid");
-        }
-    }
+    //     Redis::del("ws_{$uid}_client_id");
+    //     if (!empty($oldClientId)) {
+    //         Gateway::destoryClient($oldClientId);
+    //         Redis::del("ws_{$oldClientId}_uid");
+    //     }
+    // }
 }

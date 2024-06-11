@@ -2,14 +2,11 @@
 
 namespace app\model\logic;
 
-use app\model\database\SettingAirdropModel;
 use app\model\database\SettingAttributeModel;
 use app\model\database\SettingBlockchainNetworkModel;
 use app\model\database\SettingCoinModel;
 use app\model\database\SettingDepositModel;
 use app\model\database\SettingGeneralModel;
-use app\model\database\SettingLevelModel;
-use app\model\database\SettingMissionModel;
 use app\model\database\SettingNftModel;
 use app\model\database\SettingOperatorModel;
 use app\model\database\SettingPaymentModel;
@@ -24,9 +21,6 @@ class SettingLogic
         $_response = false;
 
         switch ($table) {
-            case "airdrop":
-                $_response = SettingAirdropModel::where($params);
-                break;
             case "attribute":
                 $_response = SettingAttributeModel::where($params);
                 break;
@@ -41,12 +35,6 @@ class SettingLogic
                 break;
             case "general":
                 $_response = SettingGeneralModel::where($params)->where("is_show", 1);
-                break;
-            case "level":
-                $_response = SettingLevelModel::where($params);
-                break;
-            case "mission":
-                $_response = SettingMissionModel::where($params);
                 break;
             case "nft":
                 $_response = SettingNftModel::where($params);
