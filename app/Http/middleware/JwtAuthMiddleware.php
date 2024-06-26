@@ -1,6 +1,6 @@
 <?php
 
-namespace plugin\admin\app\middleware;
+namespace app\middleware;
 
 # system lib
 use Symfony\Component\HttpFoundation\Response;
