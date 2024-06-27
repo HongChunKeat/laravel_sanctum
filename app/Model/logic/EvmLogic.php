@@ -7,13 +7,13 @@ namespace app\model\logic;
 use support\Log;
 use Web3\Contract;
 use Web3\Providers\HttpProvider;
-use Web3\RequestManagers\HttpRequestManager;
 use Web3\Utils;
 use Web3\Web3;
 use Elliptic\EC;
 use kornrunner\Ethereum\Transaction;
 use kornrunner\Keccak;
 
+# https://www.quicknode.com/docs/ethereum
 final class EvmLogic
 {
     private static function abi()
@@ -161,7 +161,24 @@ final class EvmLogic
         return $block;
     }
 
-    # get transaction info of the txid
+    # get transaction info of the txid - no log but have more info
+    public static function getTransactionByHash(string $rpcUrl, string $txid)
+    {
+        $web3 = new Web3(new HttpProvider($rpcUrl, 2));
+
+        $ret = [];
+        $web3->eth->getTransactionByHash($txid, function ($err, $data) use (&$ret) {
+            if (!is_null($err)) {
+                Log::error("getTransactionByHash err", ["err" => $err]);
+            } else {
+                $ret = json_decode(json_encode($data, 1), true);
+            }
+        });
+
+        return $ret;
+    }
+
+    # get transaction info of the txid - with log but less info
     public static function getTransactionReceipt(string $rpcUrl, string $txid)
     {
         $web3 = new Web3(new HttpProvider($rpcUrl, 2));

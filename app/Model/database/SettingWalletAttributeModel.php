@@ -2,8 +2,6 @@
 
 namespace app\model\database;
 
-use app\model\database\DbBase;
-
 class SettingWalletAttributeModel extends DbBase
 {
     /**

@@ -2,7 +2,6 @@
 
 namespace app\model\database;
 
-use app\model\database\DbBase;
 use app\model\logic\HelperLogic;
 use zjkal\TimeHelper;
 

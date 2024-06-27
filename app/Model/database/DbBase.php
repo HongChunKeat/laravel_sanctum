@@ -3,8 +3,8 @@
 namespace app\model\database;
 
 use Illuminate\Database\Eloquent\Model;
-use app\model\logic\HelperLogic;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use app\model\logic\HelperLogic;
 
 class DbBase extends Model
 {

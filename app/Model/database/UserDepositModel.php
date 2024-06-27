@@ -2,7 +2,6 @@
 
 namespace app\model\database;
 
-use app\model\database\DbBase;
 use zjkal\TimeHelper;
 
 class UserDepositModel extends DbBase

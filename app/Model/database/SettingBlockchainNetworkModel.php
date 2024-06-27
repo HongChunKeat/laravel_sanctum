@@ -2,8 +2,6 @@
 
 namespace app\model\database;
 
-use app\model\database\DbBase;
-
 class SettingBlockchainNetworkModel extends DbBase
 {
     /**

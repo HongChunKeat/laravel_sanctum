@@ -3,7 +3,6 @@
 namespace app\model\database;
 
 use support\Request;
-use app\model\database\DbBase;
 use zjkal\TimeHelper;
 
 class LogUserModel extends DbBase
