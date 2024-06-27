@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use app\http\controller as admin;
+use App\Http\Controllers as admin;
+use App\Http\Middleware\JwtAuthMiddleware;
+use App\Http\Middleware\MaintenanceMiddleware;
+use App\Http\Middleware\PermissionControlMiddleware;
 
 /**
  * 执行操作: 前端访客
@@ -23,13 +26,13 @@ Route::prefix("/global")->group(function () {
 Route::prefix("/admin")->group(function () {
     // auth
     Route::prefix("/auth")->group(function () {
-        Route::get("/request", [admin\auth\Ask::class, "index"]);
-        Route::post("/verify", [admin\auth\Verify::class, "index"]);
-        Route::post("/logout", [admin\auth\Logout::class, "index"])->middleware([
-            plugin\admin\app\middleware\JwtAuthMiddleware::class
+        Route::get("/request", [admin\Auth\Ask::class, "index"]);
+        Route::get("/verify", [admin\Auth\Verify::class, "index"]);
+        Route::get("/logout", [admin\Auth\Logout::class, "index"])->middleware([
+            JwtAuthMiddleware::class
         ]);
-        Route::get("/rule", [admin\auth\Rule::class, "index"])->middleware([
-            plugin\admin\app\middleware\JwtAuthMiddleware::class
+        Route::get("/rule", [admin\Auth\Rule::class, "index"])->middleware([
+            JwtAuthMiddleware::class
         ]);
     });
 
@@ -37,8 +40,8 @@ Route::prefix("/admin")->group(function () {
     Route::prefix("/enumList")->group(function () {
         Route::get("/list", [admin\enumList\Listing::class, "index"]);
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // account
@@ -65,8 +68,8 @@ Route::prefix("/admin")->group(function () {
             Route::put("/deductBalance/{id:\d+}", [admin\account\user\DeductBalance::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // hierarchy
@@ -74,8 +77,8 @@ Route::prefix("/admin")->group(function () {
         Route::get("/upline", [admin\hierarchy\Upline::class, "index"]);
         Route::get("/downline", [admin\hierarchy\Downline::class, "index"]);
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // log
@@ -107,8 +110,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\log\user\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // network
@@ -122,8 +125,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\network\sponsor\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // permission
@@ -155,8 +158,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\permission\warehouse\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     Route::prefix("/reward")->group(function () {
@@ -169,8 +172,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\reward\record\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // setting
@@ -274,8 +277,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\setting\withdraw\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // stat
@@ -289,8 +292,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\stat\sponsor\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // user
@@ -331,8 +334,8 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\user\withdraw\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // wallet
@@ -355,17 +358,17 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\wallet\transactionDetail\Delete::class, "index"]);
         });
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 
     // summary
     Route::prefix("/dashboard")->group(function () {
         // Route::get("/activeUser", [admin\dashboard\ActiveUser::class, "index"]);
     })->middleware([
-        plugin\admin\app\middleware\JwtAuthMiddleware::class,
-        plugin\admin\app\middleware\PermissionControlMiddleware::class
+        JwtAuthMiddleware::class,
+        PermissionControlMiddleware::class
     ]);
 })->middleware([
-    plugin\admin\app\middleware\MaintenanceMiddleware::class,
+    MaintenanceMiddleware::class,
 ]);
