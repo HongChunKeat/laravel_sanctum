@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers as admin;
-use App\Http\Middleware\JwtAuthMiddleware;
 use App\Http\Middleware\MaintenanceMiddleware;
 use App\Http\Middleware\PermissionControlMiddleware;
 
@@ -19,20 +18,25 @@ use App\Http\Middleware\PermissionControlMiddleware;
 
 // global
 Route::prefix("/global")->group(function () {
-    Route::post("/redisFlush", [admin\GlobalController::class, "redisFlush"]);
-    Route::post("/redis", [admin\GlobalController::class, "redis"]);
+    Route::get("/redisFlush", [admin\GlobalController::class, "redisFlush"]);
+    Route::get("/redis", [admin\GlobalController::class, "redis"]);
+});
+
+// csrf
+Route::get("/csrfToken", function () {
+    return ["token" => csrf_token()];
 });
 
 Route::prefix("/admin")->group(function () {
     // auth
     Route::prefix("/auth")->group(function () {
-        Route::get("/request", [admin\Auth\Ask::class, "index"]);
-        Route::get("/verify", [admin\Auth\Verify::class, "index"]);
+        Route::post("/request", [admin\Auth\Ask::class, "index"]);
+        Route::post("/verify", [admin\Auth\Verify::class, "index"]);
         Route::get("/logout", [admin\Auth\Logout::class, "index"])->middleware([
-            JwtAuthMiddleware::class
+            "auth:sanctum"
         ]);
         Route::get("/rule", [admin\Auth\Rule::class, "index"])->middleware([
-            JwtAuthMiddleware::class
+            "auth:sanctum"
         ]);
     });
 
@@ -40,7 +44,7 @@ Route::prefix("/admin")->group(function () {
     Route::prefix("/enumList")->group(function () {
         Route::get("/list", [admin\enumList\Listing::class, "index"]);
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -68,7 +72,7 @@ Route::prefix("/admin")->group(function () {
             Route::put("/deductBalance/{id:\d+}", [admin\account\user\DeductBalance::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -77,7 +81,7 @@ Route::prefix("/admin")->group(function () {
         Route::get("/upline", [admin\hierarchy\Upline::class, "index"]);
         Route::get("/downline", [admin\hierarchy\Downline::class, "index"]);
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -110,7 +114,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\log\user\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -125,7 +129,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\network\sponsor\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -158,7 +162,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\permission\warehouse\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -172,7 +176,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\reward\record\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -277,7 +281,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\setting\withdraw\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -292,7 +296,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\stat\sponsor\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -334,7 +338,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\user\withdraw\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -358,7 +362,7 @@ Route::prefix("/admin")->group(function () {
             Route::delete("/{id:\d+}", [admin\wallet\transactionDetail\Delete::class, "index"]);
         });
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 
@@ -366,7 +370,7 @@ Route::prefix("/admin")->group(function () {
     Route::prefix("/dashboard")->group(function () {
         // Route::get("/activeUser", [admin\dashboard\ActiveUser::class, "index"]);
     })->middleware([
-        JwtAuthMiddleware::class,
+        "auth:sanctum",
         PermissionControlMiddleware::class
     ]);
 })->middleware([

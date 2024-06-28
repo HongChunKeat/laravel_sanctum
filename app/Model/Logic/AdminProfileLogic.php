@@ -52,7 +52,9 @@ class AdminProfileLogic
 
     public static function newAccessToken($user)
     {
-        $newToken = Auth::login($user);
+        // $newToken = Auth::login($user);
+        $user->tokens()->delete();
+        $newToken = $user->createToken("token", ["*"], now()->addHours(3))->plainTextToken;
 
         // 3 hours
         Redis::setEx("admin_accessToken:{$user['admin_id']}", 10800, $newToken);
@@ -65,9 +67,10 @@ class AdminProfileLogic
         return Redis::get("admin_accessToken:{$admin_id}");
     }
 
-    public static function logout(string $admin_id = "")
+    public static function logout($user)
     {
-        Auth::logout();
-        return Redis::del("admin_accessToken:{$admin_id}");
+        // Auth::logout();
+        $user->tokens()->delete();
+        return Redis::del("admin_accessToken:{$user['admin_id']}");
     }
 }

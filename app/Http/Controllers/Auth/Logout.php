@@ -15,10 +15,10 @@ class Logout extends Base
     public function index(Request $request)
     {
         # user id
-        if (!isset($request->visitor["id"])) {
+        if (!isset($request->user()["id"])) {
             return $this->jwtError();
         } else {
-            $cleanVars["uid"] = $request->visitor["id"];
+            $cleanVars["uid"] = $request->user()["id"];
         };
 
         # [proceed]
@@ -26,7 +26,7 @@ class Logout extends Base
 
         $user = AccountAdminModel::where("id", $cleanVars["uid"])->first();
         if ($user) {
-            $res = AdminProfileLogic::logout($user["admin_id"]);
+            $res = AdminProfileLogic::logout($user);
         }
 
         # [result]

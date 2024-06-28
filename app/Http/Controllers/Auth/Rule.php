@@ -14,10 +14,10 @@ class Rule extends Base
     public function index(Request $request)
     {
         # user id`
-        if (!isset($request->visitor["id"])) {
+        if (!isset($request->user()["id"])) {
             return $this->jwtError();
         } else {
-            $cleanVars["uid"] = $request->visitor["id"];
+            $cleanVars["uid"] = $request->user()["id"];
         };
 
         # [proceed]

@@ -18,7 +18,7 @@ class PermissionControlMiddleware
 {
     protected $ignore = "*";
 
-    public function process(Request $request, Closure $handler): Response
+    public function handle(Request $request, Closure $handler): Response
     {
         $proceed = false;
         $route = $request->route;

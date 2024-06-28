@@ -11,7 +11,7 @@ use App\Model\Logic\SettingLogic;
 
 class LogReaderMiddleware
 {
-    public function process(Request $request, Closure $handler): Response
+    public function handle(Request $request, Closure $handler): Response
     {
         $proceed = false;
 

@@ -11,7 +11,7 @@ use App\Model\Logic\SettingLogic;
 
 class MaintenanceMiddleware
 {
-    public function process(Request $request, Closure $handler): Response
+    public function handle(Request $request, Closure $handler): Response
     {
         // check maintenance
         $stopAdmin = SettingLogic::get("general", ["category" => "maintenance", "code" => "stop_admin", "value" => 1]);

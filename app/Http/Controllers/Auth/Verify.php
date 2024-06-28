@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 # library
 use App\Http\Controllers\Base;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 # database & logic
 use App\Model\Database\LogAdminModel;
 use App\Model\Database\AccountAdminModel;
@@ -50,7 +51,11 @@ class Verify extends Base
                 LogAdminModel::log($request, "login", "account_admin", $user["id"]);
                 $this->response = [
                     "success" => true,
-                    "data" => AdminProfileLogic::newAccessToken($user),
+                    "data" => [
+                        "token_type" => "Bearer",
+                        "expires_in" => 10800,
+                        "access_token" => AdminProfileLogic::newAccessToken($user),
+                    ],
                 ];
             }
         }

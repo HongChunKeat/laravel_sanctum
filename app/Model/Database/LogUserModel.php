@@ -50,7 +50,7 @@ class LogUserModel extends DbBase
 
     public static function log(Request $request, string $remark = null, string $refTable = null, int $refId = 0)
     {
-        $uid = $request->visitor["id"] ?? 0;
+        $uid = $request->user()["id"] ?? 0;
 
         LogUserModel::create([
             "uid" => $uid,

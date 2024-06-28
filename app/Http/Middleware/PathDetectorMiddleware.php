@@ -15,7 +15,7 @@ class PathDetectorMiddleware
     protected $ignorePath = ["/{id:\d+}", "/{id}"];
     protected $onlyMethods = ["POST", "GET", "PATCH", "PUT", "DELETE"];
 
-    public function process(Request $request, Closure $handler): Response
+    public function handle(Request $request, Closure $handler): Response
     {
         $proceed = false;
 

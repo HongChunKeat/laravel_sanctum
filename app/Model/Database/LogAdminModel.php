@@ -50,7 +50,7 @@ class LogAdminModel extends DbBase
 
     public static function log(Request $request, string $remark = null, string $refTable = null, int $refId = 0)
     {
-        $adminId = $request->visitor["id"] ?? 0;
+        $adminId = $request->user()["id"] ?? 0;
 
         LogAdminModel::create([
             "admin_uid" => $adminId,
