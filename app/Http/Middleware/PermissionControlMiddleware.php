@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 # system lib
 use Closure;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 # database & logic
 use App\Model\Database\AdminPermissionModel;
 use App\Model\Database\PermissionTemplateModel;
@@ -28,14 +28,15 @@ class PermissionControlMiddleware
             $getPath = PermissionWarehouseModel::where("from_site", "admin")
                 ->where("code", $pathMethod)
                 ->first();
-            
+
             $role = AdminPermissionModel::where("admin_uid", $request->visitor->id)->first();
-            if($role) {
+            if ($role) {
                 $getPermission = PermissionTemplateModel::where("id", $role["role"])->first();
 
-                if ($getPath && $getPermission && 
-                    (in_array($pathMethod, json_decode($getPermission->rule)) || 
-                    in_array($this->ignore, json_decode($getPermission->rule)))
+                if (
+                    $getPath && $getPermission &&
+                    (in_array($pathMethod, json_decode($getPermission->rule)) ||
+                        in_array($this->ignore, json_decode($getPermission->rule)))
                 ) {
                     $proceed = true;
                 }
@@ -45,10 +46,10 @@ class PermissionControlMiddleware
         // proceed to onion core
         return $proceed
             ? $handler($request)
-            : [
+            : response()->json([
                 "success" => false,
-                "data" => "903",
+                "data" => "403",
                 "msg" => "no_permission",
-            ];
+            ], 403);
     }
 }

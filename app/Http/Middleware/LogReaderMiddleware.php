@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 # system lib
 use Closure;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 # database & model
 use App\Model\Logic\SettingLogic;
 

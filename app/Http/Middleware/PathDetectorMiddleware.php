@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 # system lib
 use Closure;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 # database & logic
 use App\Model\Database\PermissionWarehouseModel;
 use App\Model\Logic\HelperLogic;
@@ -61,10 +61,10 @@ class PathDetectorMiddleware
         // proceed to onion core
         return $proceed
             ? $handler($request)
-            : [
+            : response()->json([
                 "success" => false,
-                "data" => "902",
-                "msg" => "invalid_path",
-            ];
+                "data" => "404",
+                "msg" => "not_found",
+            ], 404);
     }
 }

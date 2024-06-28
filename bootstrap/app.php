@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Exception\UnauthenticatedException;
 use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,5 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->report(function (UnauthenticatedException $e) {
+        });
     })->create();

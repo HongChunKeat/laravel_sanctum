@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 # library
 use App\Http\Controllers\Base;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 # database & logic
 use App\Model\Database\LogAdminModel;
 use App\Model\Database\AccountAdminModel;

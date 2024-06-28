@@ -54,7 +54,7 @@ class AdminProfileLogic
     {
         // $newToken = Auth::login($user);
         $user->tokens()->delete();
-        $newToken = $user->createToken("token", ["*"], now()->addHours(3))->plainTextToken;
+        $newToken = $user->createToken("token" . time(), ["*"], now()->addHours(3))->plainTextToken;
 
         // 3 hours
         Redis::setEx("admin_accessToken:{$user['admin_id']}", 10800, $newToken);
