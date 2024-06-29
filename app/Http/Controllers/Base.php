@@ -164,8 +164,8 @@ class Base
         Auth::logout();
         $this->response = [
             "success" => false,
-            "data" => "901",
-            "msg" => "jwt_error",
+            "data" => "401",
+            "msg" => "unauthorized",
         ];
 
         return HelperLogic::formatOutput($this->response);
