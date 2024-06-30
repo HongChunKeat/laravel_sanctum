@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+# system lib
+use Illuminate\Support\Facades\Schedule;
+# cronjob class
+use App\Cronjob\ExpiredToken;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+# https://laravel.com/docs/11.x/scheduling
+
+Schedule::call(new ExpiredToken)->cron("* * * * *");
