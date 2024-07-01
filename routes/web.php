@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers as admin;
 use App\Http\Middleware\MaintenanceMiddleware;
+use App\Http\Middleware\PathDetectorMiddleware;
 use App\Http\Middleware\PermissionControlMiddleware;
 
 /**
@@ -30,29 +31,35 @@ Route::get("/csrfToken", function () {
     return ["token" => csrf_token()];
 });
 
-Route::prefix("/admin")->group(function () {
+Route::middleware([
+    MaintenanceMiddleware::class,
+    PathDetectorMiddleware::class
+])->prefix("/admin")->group(function () {
     // auth
     Route::prefix("/auth")->group(function () {
         Route::post("/request", [admin\Auth\Ask::class, "index"]);
         Route::post("/verify", [admin\Auth\Verify::class, "index"]);
         Route::get("/logout", [admin\Auth\Logout::class, "index"])->middleware([
-            "auth:sanctum"
+            "auth:sanctum",
         ]);
         Route::get("/rule", [admin\Auth\Rule::class, "index"])->middleware([
-            "auth:sanctum"
+            "auth:sanctum",
         ]);
     });
 
     // enum list
-    Route::prefix("/enumList")->group(function () {
-        Route::get("/list", [admin\enumList\Listing::class, "index"]);
-    })->middleware([
+    Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
-    ]);
+    ])->prefix("/enumList")->group(function () {
+        Route::get("/list", [admin\enumList\Listing::class, "index"]);
+    });
 
     // account
-    Route::prefix("/account")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/account")->group(function () {
         Route::prefix("/admin")->group(function () {
             Route::get("/list", [admin\account\admin\Listing::class, "index"]);
             Route::get("", [admin\account\admin\Paging::class, "index"]);
@@ -74,22 +81,22 @@ Route::prefix("/admin")->group(function () {
             Route::put("/addBalance/{id:\d+}", [admin\account\user\AddBalance::class, "index"]);
             Route::put("/deductBalance/{id:\d+}", [admin\account\user\DeductBalance::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // hierarchy
-    Route::prefix("/hierarchy")->group(function () {
-        Route::get("/upline", [admin\hierarchy\Upline::class, "index"]);
-        Route::get("/downline", [admin\hierarchy\Downline::class, "index"]);
-    })->middleware([
+    Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
-    ]);
+    ])->prefix("/hierarchy")->group(function () {
+        Route::get("/upline", [admin\hierarchy\Upline::class, "index"]);
+        Route::get("/downline", [admin\hierarchy\Downline::class, "index"]);
+    });
 
     // log
-    Route::prefix("/log")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/log")->group(function () {
         Route::prefix("/admin")->group(function () {
             Route::get("/list", [admin\log\admin\Listing::class, "index"]);
             Route::get("", [admin\log\admin\Paging::class, "index"]);
@@ -116,13 +123,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\log\user\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\log\user\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // network
-    Route::prefix("/network")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/network")->group(function () {
         Route::prefix("/sponsor")->group(function () {
             Route::get("/list", [admin\network\sponsor\Listing::class, "index"]);
             Route::get("", [admin\network\sponsor\Paging::class, "index"]);
@@ -131,13 +138,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\network\sponsor\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\network\sponsor\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // permission
-    Route::prefix("/permission")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/permission")->group(function () {
         Route::prefix("/admin")->group(function () {
             Route::get("/list", [admin\permission\admin\Listing::class, "index"]);
             Route::get("", [admin\permission\admin\Paging::class, "index"]);
@@ -164,12 +171,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\permission\warehouse\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\permission\warehouse\Delete::class, "index"]);
         });
-    })->middleware([
+    });
+
+    // reward
+    Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
-    ]);
-
-    Route::prefix("/reward")->group(function () {
+    ])->prefix("/reward")->group(function () {
         Route::prefix("/record")->group(function () {
             Route::get("/list", [admin\reward\record\Listing::class, "index"]);
             Route::get("", [admin\reward\record\Paging::class, "index"]);
@@ -178,13 +186,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\reward\record\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\reward\record\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // setting
-    Route::prefix("/setting")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/setting")->group(function () {
         Route::prefix("/attribute")->group(function () {
             Route::get("/list", [admin\setting\attribute\Listing::class, "index"]);
             Route::get("/{id:\d+}", [admin\setting\attribute\Read::class, "index"]);
@@ -283,13 +291,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\setting\withdraw\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\setting\withdraw\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // stat
-    Route::prefix("/stat")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/stat")->group(function () {
         Route::prefix("/sponsor")->group(function () {
             Route::get("/list", [admin\stat\sponsor\Listing::class, "index"]);
             Route::get("", [admin\stat\sponsor\Paging::class, "index"]);
@@ -298,13 +306,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\stat\sponsor\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\stat\sponsor\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // user
-    Route::prefix("/user")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/user")->group(function () {
         Route::prefix("/deposit")->group(function () {
             Route::get("/list", [admin\user\deposit\Listing::class, "index"]);
             Route::get("", [admin\user\deposit\Paging::class, "index"]);
@@ -340,13 +348,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\user\withdraw\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\user\withdraw\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // wallet
-    Route::prefix("/wallet")->group(function () {
+    Route::middleware([
+        "auth:sanctum",
+        PermissionControlMiddleware::class
+    ])->prefix("/wallet")->group(function () {
         Route::prefix("/transaction")->group(function () {
             Route::get("/list", [admin\wallet\transaction\Listing::class, "index"]);
             Route::get("", [admin\wallet\transaction\Paging::class, "index"]);
@@ -364,18 +372,13 @@ Route::prefix("/admin")->group(function () {
             Route::put("/{id:\d+}", [admin\wallet\transactionDetail\Update::class, "index"]);
             Route::delete("/{id:\d+}", [admin\wallet\transactionDetail\Delete::class, "index"]);
         });
-    })->middleware([
-        "auth:sanctum",
-        PermissionControlMiddleware::class
-    ]);
+    });
 
     // summary
-    Route::prefix("/dashboard")->group(function () {
-        // Route::get("/activeUser", [admin\dashboard\ActiveUser::class, "index"]);
-    })->middleware([
+    Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
-    ]);
-})->middleware([
-    MaintenanceMiddleware::class,
-]);
+    ])->prefix("/dashboard")->group(function () {
+        // Route::get("/activeUser", [admin\dashboard\ActiveUser::class, "index"]);
+    });
+});

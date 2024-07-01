@@ -57,7 +57,7 @@ class Base
 
             //add on greater than 0
             if (
-                (str_contains($rulesString, "number") || str_contains($rulesString, "digits_between"))
+                (str_contains($rulesString, "integer") || str_contains($rulesString, "numeric"))
                 && !str_contains($rulesString, "gt") && !str_contains($rulesString, "negative")
             ) {
                 if (!empty($rulesString)) {
@@ -103,8 +103,8 @@ class Base
     {
         $reserveMsg = [
             "required" => "missing",
-            "number" => "must_be_number",
-            "digits_between" => "must_be_number",
+            "integer" => "must_be_integer",
+            "numeric" => "must_be_numeric",
             "lt" => "must_be_less_than",
             "gt" => "must_be_greater_than",
             "gte" => "must_be_greater_or_equal_than",
@@ -153,6 +153,18 @@ class Base
                 "msg" => "error",
             ];
         }
+
+        return HelperLogic::formatOutput($this->response);
+    }
+
+    protected function tokenError()
+    {
+        // for token still exist but unable to fetch user bug
+        $this->response = [
+            "success" => false,
+            "data" => ["unauthenticated"],
+            "msg" => "401"
+        ];
 
         return HelperLogic::formatOutput($this->response);
     }

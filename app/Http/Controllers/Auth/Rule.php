@@ -13,8 +13,12 @@ class Rule extends Base
 {
     public function index(Request $request)
     {
-        # user id
-        $cleanVars["uid"] = $request->user()["id"];
+        # user id`
+        if (!isset($request->user()["id"])) {
+            return $this->tokenError();
+        } else {
+            $cleanVars["uid"] = $request->user()["id"];
+        };
 
         # [proceed]
         $role = AdminPermissionModel::where("admin_uid", $cleanVars["uid"])->first();

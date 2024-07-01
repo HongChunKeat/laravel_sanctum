@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\CorsMiddleware;
-use App\Http\Middleware\PathDetectorMiddleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
@@ -17,8 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
         $middleware->append([
-            CorsMiddleware::class,
-            PathDetectorMiddleware::class
+            CorsMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

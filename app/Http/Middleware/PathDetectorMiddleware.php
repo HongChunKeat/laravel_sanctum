@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 # database & logic
 use App\Model\Database\PermissionWarehouseModel;
 use App\Model\Logic\HelperLogic;
+use Illuminate\Support\Facades\Log;
 
 class PathDetectorMiddleware
 {
@@ -33,30 +34,33 @@ class PathDetectorMiddleware
          * - $route->getPath() + $route->getMehods()[0]
          * - $request->controller + $request->action;
          */
-        $pathMethod = HelperLogic::buildActionCode($route->getPath(), $route->getMethods()[0]);
+        Log::info($request->path());
+        Log::info($request->method());
+        // $pathMethod = HelperLogic::buildActionCode($route->getPath(), $route->getMethods()[0]);
 
-        // valid method
-        if ($route && isset($route->getMethods()[0]) && in_array($route->getMethods()[0], $this->onlyMethods)) {
-            // check if the permission in warehouse
-            $getPath = PermissionWarehouseModel::where("from_site", "admin")
-                ->where("code", $pathMethod)
-                ->first();
+        // // valid method
+        // if ($route && isset($route->getMethods()[0]) && in_array($route->getMethods()[0], $this->onlyMethods)) {
+        //     // check if the permission in warehouse
+        //     $getPath = PermissionWarehouseModel::where("from_site", "admin")
+        //         ->where("code", $pathMethod)
+        //         ->first();
 
-            if ($getPath) {
-                $proceed = true;
-            } else {
-                $created = PermissionWarehouseModel::create([
-                    "code" => $pathMethod,
-                    "from_site" => "admin",
-                    "path" => $route->getPath(),
-                    "action" => $route->getMethods()[0],
-                ]);
+        //     if ($getPath) {
+        //         $proceed = true;
+        //     } else {
+        //         $created = PermissionWarehouseModel::create([
+        //             "code" => $pathMethod,
+        //             "from_site" => "admin",
+        //             "path" => $route->getPath(),
+        //             "action" => $route->getMethods()[0],
+        //         ]);
 
-                if ($created) {
-                    $proceed = true;
-                }
-            }
-        }
+        //         if ($created) {
+        //             $proceed = true;
+        //         }
+        //     }
+        // }
+        $proceed = true;
 
         // proceed to onion core
         return $proceed
