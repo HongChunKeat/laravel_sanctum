@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 # library
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 # database & logic
 use App\Model\Logic\HelperLogic;
 
@@ -154,19 +153,6 @@ class Base
                 "msg" => "error",
             ];
         }
-
-        return HelperLogic::formatOutput($this->response);
-    }
-
-    protected function jwtError()
-    {
-        // for when account not exist but token still exist bug
-        Auth::logout();
-        $this->response = [
-            "success" => false,
-            "data" => "401",
-            "msg" => "unauthorized",
-        ];
 
         return HelperLogic::formatOutput($this->response);
     }

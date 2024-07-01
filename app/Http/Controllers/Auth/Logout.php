@@ -7,24 +7,18 @@ use App\Http\Controllers\Base;
 use Illuminate\Http\Request;
 # database & logic
 use App\Model\Database\LogAdminModel;
-use App\Model\Database\AccountAdminModel;
 use App\Model\Logic\AdminProfileLogic;
 
 class Logout extends Base
 {
     public function index(Request $request)
     {
-        # user id
-        if (!isset($request->user()["id"])) {
-            return $this->jwtError();
-        } else {
-            $cleanVars["uid"] = $request->user()["id"];
-        };
+        # user
+        $user = $request->user();
 
         # [proceed]
         $res = "";
 
-        $user = AccountAdminModel::where("id", $cleanVars["uid"])->first();
         if ($user) {
             $res = AdminProfileLogic::logout($user);
         }
