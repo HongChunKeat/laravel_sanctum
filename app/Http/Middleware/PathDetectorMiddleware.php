@@ -63,8 +63,8 @@ class PathDetectorMiddleware
             ? $handler($request)
             : response()->json([
                 "success" => false,
-                "data" => "404",
-                "msg" => "not_found",
+                "data" => ["not_found"],
+                "msg" => "404"
             ], 404);
     }
 }

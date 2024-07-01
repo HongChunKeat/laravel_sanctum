@@ -19,8 +19,8 @@ class MaintenanceMiddleware
         if ($stopAdmin || $stopLogin) {
             return response()->json([
                 "success" => false,
-                "data" => "503",
-                "msg" => "under_maintenance",
+                "data" => ["under_maintenance"],
+                "msg" => "503"
             ], 503);
         } else {
             return $handler($request);

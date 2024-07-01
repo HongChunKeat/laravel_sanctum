@@ -48,8 +48,8 @@ class PermissionControlMiddleware
             ? $handler($request)
             : response()->json([
                 "success" => false,
-                "data" => "403",
-                "msg" => "no_permission",
+                "data" => ["no_permission"],
+                "msg" => "403"
             ], 403);
     }
 }

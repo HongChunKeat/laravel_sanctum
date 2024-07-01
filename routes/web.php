@@ -16,6 +16,9 @@ use App\Http\Middleware\PermissionControlMiddleware;
  *    Delete = DELETE /tickets/{id} - 删掉 9839 这张车票
  */
 
+// empty login for unauthenticated route login not found problem
+Route::get("/login")->name("login");
+
 // global
 Route::prefix("/global")->group(function () {
     Route::get("/redisFlush", [admin\GlobalController::class, "redisFlush"]);
