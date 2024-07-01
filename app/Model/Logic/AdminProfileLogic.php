@@ -4,7 +4,6 @@ namespace App\Model\Logic;
 
 # system lib
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Auth;
 # database & logic
 use App\Model\Logic\SecureLogic;
 use App\Model\Logic\HelperLogic;
@@ -52,7 +51,7 @@ class AdminProfileLogic
 
     public static function newAccessToken($user)
     {
-        // $newToken = Auth::login($user);
+        // no need put in session - it verify user based on token
         $user->tokens()->delete();
         $newToken = $user->createToken("admin_access_token:{$user['admin_id']}", ["*"], now()->addHours(3))->plainTextToken;
 
@@ -69,7 +68,6 @@ class AdminProfileLogic
 
     public static function logout($user)
     {
-        // Auth::logout();
         $user->tokens()->delete();
         return Redis::del("admin_access_token:{$user['admin_id']}");
     }

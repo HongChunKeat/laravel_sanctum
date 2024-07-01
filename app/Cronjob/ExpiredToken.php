@@ -9,7 +9,7 @@ class ExpiredToken
 {
     public function __invoke()
     {
-        DB::table("sw_personal_access_tokens")->where("expires_at", "<=", date("Y-m-d H:i:s"))->delete();
-        Log::info(date("Y-m-d H:i:s"));
+        DB::table("personal_access_tokens")->where("expires_at", "<=", date("Y-m-d H:i:s"))->delete();
+        Log::info("expired_token:" . date("Y-m-d H:i:s"));
     }
 }
