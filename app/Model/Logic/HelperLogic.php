@@ -120,7 +120,7 @@ final class HelperLogic
         $target = str_replace("_{id:\d+}", "_id", $target);
         $target = str_replace("_{id}", "_id", $target);
 
-        return $method ? strtolower("{$target}@{$method}") : strtolower("{$target}");
+        return !empty($method) ? strtolower("{$target}@{$method}") : strtolower("{$target}");
     }
 
     # build date search

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers as admin;
+use App\Http\Controllers as Admin;
 use App\Http\Middleware\MaintenanceMiddleware;
 use App\Http\Middleware\PathDetectorMiddleware;
 use App\Http\Middleware\PermissionControlMiddleware;
@@ -22,8 +22,8 @@ Route::get("/login")->name("login");
 
 // global
 Route::prefix("/global")->group(function () {
-    Route::get("/redisFlush", [admin\GlobalController::class, "redisFlush"]);
-    Route::get("/redis", [admin\GlobalController::class, "redis"]);
+    Route::get("/redisFlush", [Admin\GlobalController::class, "redisFlush"]);
+    Route::get("/redis", [Admin\GlobalController::class, "redis"]);
 });
 
 // csrf
@@ -37,12 +37,12 @@ Route::middleware([
 ])->prefix("/admin")->group(function () {
     // auth
     Route::prefix("/auth")->group(function () {
-        Route::post("/request", [admin\Auth\Ask::class, "index"]);
-        Route::post("/verify", [admin\Auth\Verify::class, "index"]);
-        Route::get("/logout", [admin\Auth\Logout::class, "index"])->middleware([
+        Route::post("/request", [Admin\Auth\Ask::class, "index"]);
+        Route::post("/verify", [Admin\Auth\Verify::class, "index"]);
+        Route::get("/logout", [Admin\Auth\Logout::class, "index"])->middleware([
             "auth:sanctum",
         ]);
-        Route::get("/rule", [admin\Auth\Rule::class, "index"])->middleware([
+        Route::get("/rule", [Admin\Auth\Rule::class, "index"])->middleware([
             "auth:sanctum",
         ]);
     });
@@ -52,7 +52,7 @@ Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
     ])->prefix("/enumList")->group(function () {
-        Route::get("/list", [admin\enumList\Listing::class, "index"]);
+        Route::get("/list", [Admin\EnumList\Listing::class, "index"]);
     });
 
     // account
@@ -61,25 +61,25 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/account")->group(function () {
         Route::prefix("/admin")->group(function () {
-            Route::get("/list", [admin\account\admin\Listing::class, "index"]);
-            Route::get("", [admin\account\admin\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\account\admin\Read::class, "index"]);
-            Route::post("", [admin\account\admin\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\account\admin\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\account\admin\Delete::class, "index"]);
+            Route::get("/list", [Admin\Account\Admin\Listing::class, "index"]);
+            Route::get("", [Admin\Account\Admin\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Account\Admin\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Account\Admin\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Account\Admin\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Account\Admin\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/user")->group(function () {
-            Route::get("/list", [admin\account\user\Listing::class, "index"]);
-            Route::get("", [admin\account\user\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\account\user\Read::class, "index"]);
-            Route::post("", [admin\account\user\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\account\user\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\account\user\Delete::class, "index"]);
-            Route::get("/details", [admin\account\user\Details::class, "index"]);
-            Route::get("/viewBalance/{id:\d+}", [admin\account\user\ViewBalance::class, "index"]);
-            Route::put("/addBalance/{id:\d+}", [admin\account\user\AddBalance::class, "index"]);
-            Route::put("/deductBalance/{id:\d+}", [admin\account\user\DeductBalance::class, "index"]);
+            Route::get("/list", [Admin\Account\User\Listing::class, "index"]);
+            Route::get("", [Admin\Account\User\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Account\User\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Account\User\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Account\User\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Account\User\Delete::class, "index"])->where("id", "\d+");
+            Route::get("/details", [Admin\Account\User\Details::class, "index"]);
+            Route::get("/viewBalance/{id}", [Admin\Account\User\ViewBalance::class, "index"])->where("id", "\d+");
+            Route::put("/addBalance/{id}", [Admin\Account\User\AddBalance::class, "index"])->where("id", "\d+");
+            Route::put("/deductBalance/{id}", [Admin\Account\User\DeductBalance::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -88,8 +88,8 @@ Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
     ])->prefix("/hierarchy")->group(function () {
-        Route::get("/upline", [admin\hierarchy\Upline::class, "index"]);
-        Route::get("/downline", [admin\hierarchy\Downline::class, "index"]);
+        Route::get("/upline", [Admin\Hierarchy\Upline::class, "index"]);
+        Route::get("/downline", [Admin\Hierarchy\Downline::class, "index"]);
     });
 
     // log
@@ -98,30 +98,30 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/log")->group(function () {
         Route::prefix("/admin")->group(function () {
-            Route::get("/list", [admin\log\admin\Listing::class, "index"]);
-            Route::get("", [admin\log\admin\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\log\admin\Read::class, "index"]);
-            Route::post("", [admin\log\admin\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\log\admin\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\log\admin\Delete::class, "index"]);
+            Route::get("/list", [Admin\Log\Admin\Listing::class, "index"]);
+            Route::get("", [Admin\Log\Admin\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Log\Admin\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Log\Admin\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Log\Admin\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Log\Admin\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/cronjob")->group(function () {
-            Route::get("/list", [admin\log\cronjob\Listing::class, "index"]);
-            Route::get("", [admin\log\cronjob\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\log\cronjob\Read::class, "index"]);
-            Route::post("", [admin\log\cronjob\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\log\cronjob\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\log\cronjob\Delete::class, "index"]);
+            Route::get("/list", [Admin\Log\Cronjob\Listing::class, "index"]);
+            Route::get("", [Admin\Log\Cronjob\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Log\Cronjob\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Log\Cronjob\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Log\Cronjob\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Log\Cronjob\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/user")->group(function () {
-            Route::get("/list", [admin\log\user\Listing::class, "index"]);
-            Route::get("", [admin\log\user\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\log\user\Read::class, "index"]);
-            Route::post("", [admin\log\user\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\log\user\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\log\user\Delete::class, "index"]);
+            Route::get("/list", [Admin\Log\User\Listing::class, "index"]);
+            Route::get("", [Admin\Log\User\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Log\User\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Log\User\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Log\User\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Log\User\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -131,12 +131,12 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/network")->group(function () {
         Route::prefix("/sponsor")->group(function () {
-            Route::get("/list", [admin\network\sponsor\Listing::class, "index"]);
-            Route::get("", [admin\network\sponsor\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\network\sponsor\Read::class, "index"]);
-            Route::post("", [admin\network\sponsor\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\network\sponsor\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\network\sponsor\Delete::class, "index"]);
+            Route::get("/list", [Admin\Network\Sponsor\Listing::class, "index"]);
+            Route::get("", [Admin\Network\Sponsor\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Network\Sponsor\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Network\Sponsor\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Network\Sponsor\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Network\Sponsor\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -146,30 +146,30 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/permission")->group(function () {
         Route::prefix("/admin")->group(function () {
-            Route::get("/list", [admin\permission\admin\Listing::class, "index"]);
-            Route::get("", [admin\permission\admin\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\permission\admin\Read::class, "index"]);
-            Route::post("", [admin\permission\admin\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\permission\admin\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\permission\admin\Delete::class, "index"]);
+            Route::get("/list", [Admin\Permission\Admin\Listing::class, "index"]);
+            Route::get("", [Admin\Permission\Admin\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Permission\Admin\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Permission\Admin\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Permission\Admin\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Permission\Admin\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/template")->group(function () {
-            Route::get("/list", [admin\permission\template\Listing::class, "index"]);
-            Route::get("", [admin\permission\template\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\permission\template\Read::class, "index"]);
-            Route::post("", [admin\permission\template\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\permission\template\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\permission\template\Delete::class, "index"]);
+            Route::get("/list", [Admin\Permission\Template\Listing::class, "index"]);
+            Route::get("", [Admin\Permission\Template\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Permission\Template\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Permission\Template\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Permission\Template\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Permission\Template\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/warehouse")->group(function () {
-            Route::get("/list", [admin\permission\warehouse\Listing::class, "index"]);
-            Route::get("", [admin\permission\warehouse\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\permission\warehouse\Read::class, "index"]);
-            Route::post("", [admin\permission\warehouse\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\permission\warehouse\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\permission\warehouse\Delete::class, "index"]);
+            Route::get("/list", [Admin\Permission\Warehouse\Listing::class, "index"]);
+            Route::get("", [Admin\Permission\Warehouse\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Permission\Warehouse\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Permission\Warehouse\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Permission\Warehouse\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Permission\Warehouse\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -179,12 +179,12 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/reward")->group(function () {
         Route::prefix("/record")->group(function () {
-            Route::get("/list", [admin\reward\record\Listing::class, "index"]);
-            Route::get("", [admin\reward\record\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\reward\record\Read::class, "index"]);
-            Route::post("", [admin\reward\record\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\reward\record\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\reward\record\Delete::class, "index"]);
+            Route::get("/list", [Admin\Reward\Record\Listing::class, "index"]);
+            Route::get("", [Admin\Reward\Record\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Reward\Record\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Reward\Record\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Reward\Record\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Reward\Record\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -194,102 +194,102 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/setting")->group(function () {
         Route::prefix("/attribute")->group(function () {
-            Route::get("/list", [admin\setting\attribute\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\attribute\Read::class, "index"]);
-            Route::get("", [admin\setting\attribute\Paging::class, "index"]);
-            Route::post("", [admin\setting\attribute\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\attribute\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\attribute\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Attribute\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Attribute\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Attribute\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Attribute\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Attribute\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Attribute\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/blockchainNetwork")->group(function () {
-            Route::get("/list", [admin\setting\blockchainNetwork\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\blockchainNetwork\Read::class, "index"]);
-            Route::get("", [admin\setting\blockchainNetwork\Paging::class, "index"]);
-            Route::post("", [admin\setting\blockchainNetwork\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\blockchainNetwork\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\blockchainNetwork\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\BlockchainNetwork\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\BlockchainNetwork\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\BlockchainNetwork\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\BlockchainNetwork\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\BlockchainNetwork\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\BlockchainNetwork\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/coin")->group(function () {
-            Route::get("/list", [admin\setting\coin\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\coin\Read::class, "index"]);
-            Route::get("", [admin\setting\coin\Paging::class, "index"]);
-            Route::post("", [admin\setting\coin\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\coin\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\coin\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Coin\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Coin\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Coin\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Coin\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Coin\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Coin\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/deposit")->group(function () {
-            Route::get("/list", [admin\setting\deposit\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\deposit\Read::class, "index"]);
-            Route::get("", [admin\setting\deposit\Paging::class, "index"]);
-            Route::post("", [admin\setting\deposit\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\deposit\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\deposit\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Deposit\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Deposit\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Deposit\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Deposit\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Deposit\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Deposit\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/general")->group(function () {
-            Route::get("/list", [admin\setting\general\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\general\Read::class, "index"]);
-            Route::get("", [admin\setting\general\Paging::class, "index"]);
-            Route::post("", [admin\setting\general\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\general\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\general\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\General\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\General\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\General\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\General\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\General\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\General\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/nft")->group(function () {
-            Route::get("/list", [admin\setting\nft\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\nft\Read::class, "index"]);
-            Route::get("", [admin\setting\nft\Paging::class, "index"]);
-            Route::post("", [admin\setting\nft\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\nft\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\nft\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Nft\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Nft\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Nft\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Nft\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Nft\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Nft\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/operator")->group(function () {
-            Route::get("/list", [admin\setting\operator\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\operator\Read::class, "index"]);
-            Route::get("", [admin\setting\operator\Paging::class, "index"]);
-            Route::post("", [admin\setting\operator\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\operator\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\operator\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Operator\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Operator\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Operator\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Operator\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Operator\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Operator\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/payment")->group(function () {
-            Route::get("/list", [admin\setting\payment\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\payment\Read::class, "index"]);
-            Route::get("", [admin\setting\payment\Paging::class, "index"]);
-            Route::post("", [admin\setting\payment\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\payment\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\payment\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Payment\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Payment\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Payment\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Payment\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Payment\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Payment\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/wallet")->group(function () {
-            Route::get("/list", [admin\setting\wallet\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\wallet\Read::class, "index"]);
-            Route::get("", [admin\setting\wallet\Paging::class, "index"]);
-            Route::post("", [admin\setting\wallet\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\wallet\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\wallet\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Wallet\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Wallet\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Wallet\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Wallet\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Wallet\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Wallet\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/walletAttribute")->group(function () {
-            Route::get("/list", [admin\setting\walletAttribute\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\walletAttribute\Read::class, "index"]);
-            Route::get("", [admin\setting\walletAttribute\Paging::class, "index"]);
-            Route::post("", [admin\setting\walletAttribute\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\walletAttribute\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\walletAttribute\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\WalletAttribute\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\WalletAttribute\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\WalletAttribute\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\WalletAttribute\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\WalletAttribute\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\WalletAttribute\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/withdraw")->group(function () {
-            Route::get("/list", [admin\setting\withdraw\Listing::class, "index"]);
-            Route::get("/{id:\d+}", [admin\setting\withdraw\Read::class, "index"]);
-            Route::get("", [admin\setting\withdraw\Paging::class, "index"]);
-            Route::post("", [admin\setting\withdraw\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\setting\withdraw\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\setting\withdraw\Delete::class, "index"]);
+            Route::get("/list", [Admin\Setting\Withdraw\Listing::class, "index"]);
+            Route::get("/{id}", [Admin\Setting\Withdraw\Read::class, "index"])->where("id", "\d+");
+            Route::get("", [Admin\Setting\Withdraw\Paging::class, "index"]);
+            Route::post("", [Admin\Setting\Withdraw\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Setting\Withdraw\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Setting\Withdraw\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -299,12 +299,12 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/stat")->group(function () {
         Route::prefix("/sponsor")->group(function () {
-            Route::get("/list", [admin\stat\sponsor\Listing::class, "index"]);
-            Route::get("", [admin\stat\sponsor\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\stat\sponsor\Read::class, "index"]);
-            Route::post("", [admin\stat\sponsor\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\stat\sponsor\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\stat\sponsor\Delete::class, "index"]);
+            Route::get("/list", [Admin\Stat\Sponsor\Listing::class, "index"]);
+            Route::get("", [Admin\Stat\Sponsor\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Stat\Sponsor\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Stat\Sponsor\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Stat\Sponsor\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Stat\Sponsor\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -314,39 +314,39 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/user")->group(function () {
         Route::prefix("/deposit")->group(function () {
-            Route::get("/list", [admin\user\deposit\Listing::class, "index"]);
-            Route::get("", [admin\user\deposit\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\user\deposit\Read::class, "index"]);
-            Route::post("", [admin\user\deposit\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\user\deposit\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\user\deposit\Delete::class, "index"]);
+            Route::get("/list", [Admin\User\Deposit\Listing::class, "index"]);
+            Route::get("", [Admin\User\Deposit\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\User\Deposit\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\User\Deposit\Create::class, "index"]);
+            Route::put("/{id}", [Admin\User\Deposit\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\User\Deposit\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/nft")->group(function () {
-            Route::get("/list", [admin\user\nft\Listing::class, "index"]);
-            Route::get("", [admin\user\nft\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\user\nft\Read::class, "index"]);
-            Route::post("", [admin\user\nft\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\user\nft\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\user\nft\Delete::class, "index"]);
+            Route::get("/list", [Admin\User\Nft\Listing::class, "index"]);
+            Route::get("", [Admin\User\Nft\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\User\Nft\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\User\Nft\Create::class, "index"]);
+            Route::put("/{id}", [Admin\User\Nft\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\User\Nft\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/remark")->group(function () {
-            Route::get("/list", [admin\user\remark\Listing::class, "index"]);
-            Route::get("", [admin\user\remark\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\user\remark\Read::class, "index"]);
-            Route::post("", [admin\user\remark\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\user\remark\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\user\remark\Delete::class, "index"]);
+            Route::get("/list", [Admin\User\Remark\Listing::class, "index"]);
+            Route::get("", [Admin\User\Remark\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\User\Remark\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\User\Remark\Create::class, "index"]);
+            Route::put("/{id}", [Admin\User\Remark\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\User\Remark\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/withdraw")->group(function () {
-            Route::get("/list", [admin\user\withdraw\Listing::class, "index"]);
-            Route::get("", [admin\user\withdraw\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\user\withdraw\Read::class, "index"]);
-            Route::post("", [admin\user\withdraw\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\user\withdraw\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\user\withdraw\Delete::class, "index"]);
+            Route::get("/list", [Admin\User\Withdraw\Listing::class, "index"]);
+            Route::get("", [Admin\User\Withdraw\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\User\Withdraw\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\User\Withdraw\Create::class, "index"]);
+            Route::put("/{id}", [Admin\User\Withdraw\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\User\Withdraw\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -356,21 +356,21 @@ Route::middleware([
         PermissionControlMiddleware::class
     ])->prefix("/wallet")->group(function () {
         Route::prefix("/transaction")->group(function () {
-            Route::get("/list", [admin\wallet\transaction\Listing::class, "index"]);
-            Route::get("", [admin\wallet\transaction\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\wallet\transaction\Read::class, "index"]);
-            Route::post("", [admin\wallet\transaction\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\wallet\transaction\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\wallet\transaction\Delete::class, "index"]);
+            Route::get("/list", [Admin\Wallet\Transaction\Listing::class, "index"]);
+            Route::get("", [Admin\Wallet\Transaction\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Wallet\Transaction\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Wallet\Transaction\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Wallet\Transaction\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Wallet\Transaction\Delete::class, "index"])->where("id", "\d+");
         });
 
         Route::prefix("/transactionDetail")->group(function () {
-            Route::get("/list", [admin\wallet\transactionDetail\Listing::class, "index"]);
-            Route::get("", [admin\wallet\transactionDetail\Paging::class, "index"]);
-            Route::get("/{id:\d+}", [admin\wallet\transactionDetail\Read::class, "index"]);
-            Route::post("", [admin\wallet\transactionDetail\Create::class, "index"]);
-            Route::put("/{id:\d+}", [admin\wallet\transactionDetail\Update::class, "index"]);
-            Route::delete("/{id:\d+}", [admin\wallet\transactionDetail\Delete::class, "index"]);
+            Route::get("/list", [Admin\Wallet\TransactionDetail\Listing::class, "index"]);
+            Route::get("", [Admin\Wallet\TransactionDetail\Paging::class, "index"]);
+            Route::get("/{id}", [Admin\Wallet\TransactionDetail\Read::class, "index"])->where("id", "\d+");
+            Route::post("", [Admin\Wallet\TransactionDetail\Create::class, "index"]);
+            Route::put("/{id}", [Admin\Wallet\TransactionDetail\Update::class, "index"])->where("id", "\d+");
+            Route::delete("/{id}", [Admin\Wallet\TransactionDetail\Delete::class, "index"])->where("id", "\d+");
         });
     });
 
@@ -379,6 +379,6 @@ Route::middleware([
         "auth:sanctum",
         PermissionControlMiddleware::class
     ])->prefix("/dashboard")->group(function () {
-        // Route::get("/activeUser", [admin\dashboard\ActiveUser::class, "index"]);
+        // Route::get("/activeUser", [Admin\dashboard\ActiveUser::class, "index"]);
     });
 });

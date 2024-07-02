@@ -12,8 +12,6 @@ use App\Model\Database\PermissionTemplateModel;
 use App\Model\Database\PermissionWarehouseModel;
 use App\Model\Logic\HelperLogic;
 
-//   - PERMISSION: 从 JWT 的信息内获得 用户资讯
-//   - PERMISSION: 用户是否拥有执行权限
 class PermissionControlMiddleware
 {
     protected $ignore = "*";
@@ -21,16 +19,16 @@ class PermissionControlMiddleware
     public function handle(Request $request, Closure $handler): Response
     {
         $proceed = false;
-        $route = $request->route;
 
-        if (isset($request->visitor->id)) {
-            $pathMethod = HelperLogic::buildActionCode($route->getPath(), $route->getMethods()[0]);
-            $getPath = PermissionWarehouseModel::where("from_site", "admin")
-                ->where("code", $pathMethod)
-                ->first();
-
-            $role = AdminPermissionModel::where("admin_uid", $request->visitor->id)->first();
+        if (isset($request->user()["id"])) {
+            $role = AdminPermissionModel::where("admin_uid", $request->user()["id"])->first();
             if ($role) {
+                $route = $request->route();
+                $path = $route->uri();
+                $method = $route->methods()[0];
+
+                $pathMethod = HelperLogic::buildActionCode($path, $method);
+                $getPath = PermissionWarehouseModel::where(["from_site" => "admin", "code" => $pathMethod])->first();
                 $getPermission = PermissionTemplateModel::where("id", $role["role"])->first();
 
                 if (

@@ -9,58 +9,42 @@ use Symfony\Component\HttpFoundation\Response;
 # database & logic
 use App\Model\Database\PermissionWarehouseModel;
 use App\Model\Logic\HelperLogic;
-use Illuminate\Support\Facades\Log;
 
 class PathDetectorMiddleware
 {
-    protected $ignorePath = ["/{id:\d+}", "/{id}"];
     protected $onlyMethods = ["POST", "GET", "PATCH", "PUT", "DELETE"];
 
     public function handle(Request $request, Closure $handler): Response
     {
         $proceed = false;
 
-        $route = $request->route;
-        // var_export($route->getPath()); // /user/{uid}
-        // var_export($route->getMethods()); // ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD","OPTIONS"]
-        // var_export($route->getName()); // user_view
-        // var_export($route->getMiddleware()); // []
-        // var_export($route->getCallback()); // ["app\\controller\\User", "view"]
-        // var_export($route->param()); // ["uid"=>111]
-        // var_export($route->param("uid")); // 111
+        $route = $request->route();
+        $path = $route->uri();
+        $method = $route->methods()[0];
 
-        /**
-         * 2 ways to generate code, temporary selected (1)
-         * - $route->getPath() + $route->getMehods()[0]
-         * - $request->controller + $request->action;
-         */
-        Log::info($request->path());
-        Log::info($request->method());
-        // $pathMethod = HelperLogic::buildActionCode($route->getPath(), $route->getMethods()[0]);
+        // valid method
+        if (!empty($path) && !empty($method) && in_array($method, $this->onlyMethods)) {
+            $pathMethod = HelperLogic::buildActionCode($path, $method);
+            // Log::info($pathMethod);
 
-        // // valid method
-        // if ($route && isset($route->getMethods()[0]) && in_array($route->getMethods()[0], $this->onlyMethods)) {
-        //     // check if the permission in warehouse
-        //     $getPath = PermissionWarehouseModel::where("from_site", "admin")
-        //         ->where("code", $pathMethod)
-        //         ->first();
+            // check if the permission in warehouse
+            $getPath = PermissionWarehouseModel::where(["from_site" => "admin", "code" => $pathMethod])->first();
 
-        //     if ($getPath) {
-        //         $proceed = true;
-        //     } else {
-        //         $created = PermissionWarehouseModel::create([
-        //             "code" => $pathMethod,
-        //             "from_site" => "admin",
-        //             "path" => $route->getPath(),
-        //             "action" => $route->getMethods()[0],
-        //         ]);
+            if ($getPath) {
+                $proceed = true;
+            } else {
+                $created = PermissionWarehouseModel::create([
+                    "code" => $pathMethod,
+                    "from_site" => "admin",
+                    "path" => $path,
+                    "action" => $method,
+                ]);
 
-        //         if ($created) {
-        //             $proceed = true;
-        //         }
-        //     }
-        // }
-        $proceed = true;
+                if ($created) {
+                    $proceed = true;
+                }
+            }
+        }
 
         // proceed to onion core
         return $proceed
