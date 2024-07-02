@@ -17,7 +17,7 @@ class DeductBalance extends Base
 {
     # [validation-rule]
     protected $rule = [
-        "wallet_id" => "required|integer|max:11",
+        "wallet_id" => "required|integer|max_digits:11",
         "amount" => "required|numeric|max:20",
     ];
 

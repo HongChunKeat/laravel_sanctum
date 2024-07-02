@@ -18,6 +18,21 @@ class Base
 
     protected $response = ["success" => false, "data" => ["failed"], "msg" => ""];
 
+    // required
+    // integer (whole number)
+    // numeric (integer and float)
+    // lt
+    // gt
+    // gte
+    // min (string input)
+    // min_digits (numberic input)
+    // max (string input)
+    // max_digits (numberic input)
+    // in
+    // email
+    // date
+    // ip
+    // alpha_num
     protected function validation($inputs = [], $rules = [])
     {
         $newRules = self::reinforceRules($rules);
@@ -97,51 +112,6 @@ class Base
         }
 
         return $newRules;
-    }
-
-    private function generateMsg($rules)
-    {
-        $reserveMsg = [
-            "required" => "missing",
-            "integer" => "must_be_integer",
-            "numeric" => "must_be_numeric",
-            "lt" => "must_be_less_than",
-            "gt" => "must_be_greater_than",
-            "gte" => "must_be_greater_or_equal_than",
-            "min" => "min_length",
-            "max" => "max_length",
-            "in" => "not_in_range",
-            "email" => "must_be_email",
-            "date" => "invalid_date",
-            "ip" => "invalid_ip",
-            "alpha_num" => "must_be_alphabet_and_number"
-        ];
-        $unknownError = "unknown_error";
-        $messages = [];
-
-        foreach ($rules as $field => $rulesString) {
-            $fieldMessages = [];
-            $fieldRules = explode("|", $rulesString);
-
-            foreach ($fieldRules as $rule) {
-                $parts = explode(":", $rule);
-                $ruleName = $parts[0];
-                $ruleValue = isset($parts[1]) ? $parts[1] : null;
-
-                $messageKey = "{$field}.{$ruleName}";
-
-                $showMsg = $reserveMsg[$ruleName] ?? $unknownError;
-                $fieldMessages[$messageKey] = "$field:{$showMsg}";
-
-                if (!is_null($ruleValue)) {
-                    $fieldMessages[$messageKey] .= "|{$ruleValue}";
-                }
-            }
-
-            $messages = array_merge($messages, $fieldMessages);
-        }
-
-        return $messages;
     }
 
     protected function output()

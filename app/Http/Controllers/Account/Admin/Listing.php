@@ -13,7 +13,7 @@ class Listing extends Base
 {
     # [validation-rule]
     protected $rule = [
-        "id" => "integer|max:11",
+        "id" => "integer|max_digits:11",
         "admin_id" => "",
         "web3_address" => "min:42|max:42|alpha_num",
         "nickname" => "",
