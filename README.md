@@ -53,14 +53,14 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Run
 
-Run server: `php artisan serve`
-Run queue: `php artisan queue:work`
-Run cronjob: `php artisan schedule:work`
-Run all: `php artisan serve & php artisan queue:work & php artisan schedule:work`
+- Run server: `php artisan serve`
+- Run queue: `php artisan queue:work`
+- Run cronjob: `php artisan schedule:work`
+- Run all: `php artisan serve & php artisan queue:work & php artisan schedule:work`
 
 ## Run in background
 
-Run in background: `nohup sh -c 'php artisan serve & php artisan queue:work & php artisan schedule:work &' > nohup.out 2>&1 &`
-Run `lsof -i:8000` to get the PID of the running server
-Run `kill -9 PID` to kill the running server
-Double check the content of nohup.out `tail nohup.out -n 200` to make sure the server is running
+- Run in background: `nohup sh -c 'php artisan serve & php artisan queue:work & php artisan schedule:work &' > nohup.out 2>&1 &`
+- Run `lsof -i:8000` to get the PID of the running server
+- Run `kill -9 PID` to kill the running server
+- Double check the content of nohup.out `tail nohup.out -n 200` to make sure the server is running
