@@ -15,19 +15,17 @@ class Base
     protected $error = [];
     protected $successTotalCount = 0;
     protected $successPassedCount = 0;
-
     protected $response = ["success" => false, "data" => ["failed"], "msg" => ""];
 
     // required
     // integer (whole number)
     // numeric (integer and float)
-    // lt
     // gt
     // gte
     // min (string input)
-    // min_digits (numberic input)
+    // min_digits (numeric input)
     // max (string input)
-    // max_digits (numberic input)
+    // max_digits (numeric input)
     // in
     // email
     // date
@@ -49,16 +47,28 @@ class Base
         }
     }
 
+    /**
+     * Enhances the provided validation rules by adding additional constraints such as maximum length, positive number checks, and minimum date rules.
+     *
+     * The method automatically adds the following rules if not already present:
+     * - "max:50" for fields without a "max", "length", or "in" rule.
+     * - "gt:0" for numeric fields without a "gt" (greater than) or "negative" rule.
+     * - "min:2" for date fields.
+     * - Removes the "negative" rule if present.
+     *
+     * @param array $rules An associative array where the key is the field name and the value is a string of validation rules.
+     * @return array The modified array of validation rules with the additional constraints applied.
+     */
     private function reinforceRules($rules)
     {
         $maxLength = 50;
         $newRules = [];
 
         foreach ($rules as $field => $rulesString) {
-            //default must be first
+            // default must be first
             $newRules[$field] = $rulesString;
 
-            //add on max
+            // add on max
             if (
                 !str_contains($rulesString, "max") &&
                 !str_contains($rulesString, "in")
@@ -70,7 +80,7 @@ class Base
                 $newRules[$field] .= "max:" . $maxLength;
             }
 
-            //add on greater than 0
+            // add on greater than 0
             if (
                 (str_contains($rulesString, "integer") || str_contains($rulesString, "numeric"))
                 && !str_contains($rulesString, "gt") && !str_contains($rulesString, "negative")
@@ -82,7 +92,7 @@ class Base
                 $newRules[$field] .= "gt:0";
             }
 
-            //add on min 2 to date
+            // add on min 2 to date
             if (str_contains($rulesString, "date")) {
                 if (!empty($rulesString)) {
                     $newRules[$field] .= "|";
@@ -114,6 +124,11 @@ class Base
         return $newRules;
     }
 
+    /**
+     * Prepares and returns a JSON response based on the validation outcome.
+     *
+     * If there are errors in the validation process, the response will indicate failure and include the error messages. Otherwise, the response structure is formatted according to the application's standard output format.
+     */
     protected function output()
     {
         if ($this->error) {
@@ -124,18 +139,24 @@ class Base
             ];
         }
 
-        return HelperLogic::formatOutput($this->response);
+        return json_encode(HelperLogic::formatOutput($this->response));
     }
 
+    /**
+     * Handles JWT-related errors and clears the current JWT token.
+     *
+     * This method is typically invoked when a user's account no longer exists but a valid JWT token is still present, leading to a potential security issue. 
+     * The token is cleared, and an appropriate error response is returned.
+     */
     protected function tokenError()
     {
-        // for token still exist but unable to fetch user bug
+        // for when account not exist but token still exist bug
         $this->response = [
             "success" => false,
-            "data" => ["unauthenticated"],
-            "msg" => "401"
+            "data" => "901",
+            "msg" => "jwt_error",
         ];
 
-        return HelperLogic::formatOutput($this->response);
+        return json_encode(HelperLogic::formatOutput($this->response));
     }
 }
