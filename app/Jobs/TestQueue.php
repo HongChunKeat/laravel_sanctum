@@ -17,6 +17,10 @@ class TestQueue implements ShouldQueue
      */
     public function __construct($data)
     {
+        // set which queue to use, the value of this key ('queue' => env('REDIS_QUEUE', 'redis_multithread'))
+        $this->onQueue('redis_multithread');
+
+        // append data
         $this->data = $data;
     }
 

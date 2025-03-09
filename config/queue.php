@@ -63,11 +63,33 @@ return [
             'after_commit' => false,
         ],
 
+        // If a job takes more than 90 minutes to complete, Laravel will assume that it has not finished successfully in time and will mark it as failed.
         'redis' => [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
             'queue' => env('REDIS_QUEUE', 'default'),
             'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
+            'max_tries' => 3,
+            'block_for' => null,
+            'after_commit' => false,
+        ],
+
+        'redis_multithread' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
+            'queue' => env('REDIS_QUEUE', 'redis_multithread'),
+            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
+            'max_tries' => 3,
+            'block_for' => null,
+            'after_commit' => false,
+        ],
+
+        'redis_singlethread' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
+            'queue' => env('REDIS_QUEUE', 'redis_singlethread'),
+            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
+            'max_tries' => 3,
             'block_for' => null,
             'after_commit' => false,
         ],

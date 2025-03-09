@@ -31,36 +31,24 @@ You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you
 
 If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Run in foreground
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## Run
-
-- Run server: `php artisan serve`
-- Run queue: `php artisan queue:work`
-- Run cronjob: `php artisan schedule:work`
-- Run all: `php artisan serve & php artisan queue:work & php artisan schedule:work`
+- Run server: <span style='color:crimson'>`php artisan serve`</span>
+- Run cronjob: <span style='color:crimson'>`php artisan schedule:work`</span>
+- Run default queue: <span style='color:crimson'>`php artisan queue:work`</span>
+- Run specific queue: <span style='color:crimson'>`php artisan queue:work --queue=redis_multithread,redis_singlethread`</span>
 
 ## Run in background
 
-- Run in background: `nohup sh -c 'php artisan serve & php artisan queue:work & php artisan schedule:work &' > nohup.out 2>&1 &`
-- Run `lsof -i:8000` to get the PID of the running server
-- Run `kill -9 PID` to kill the running server
-- Double check the content of nohup.out `tail nohup.out -n 200` to make sure the server is running
+- Run in background (without log): <span style='color:crimson'>`nohup command &> /dev/null &`</span>
+- Run in background (with log): <span style='color:crimson'>`nohup command &> logname.out &`</span>
+- Run <span style='color:crimson'>`lsof -i:8000`</span> to get the PID of the running server
+- Run <span style='color:crimson'>`kill -9 PID`</span> to kill the running server
+- Double check the content of nohup.out <span style='color:crimson'>`tail nohup.out -n 200`</span> to make sure the server is running
+
+## Queue
+
+- even if worker down the pending queue will still be saved and will be processed when the worker start
+- by default will use default queue in <span style='color:blue'>`config/queue.php`</span>
+- set which queue to use by adding this <span style='color:blue'>`$this->onQueue('redis_multithread')`</span> in job __construct , the <span style='color:blue'>`redis_multithread`</span> is the queue name in <span style='color:blue'>`config/queue.php`</span>
