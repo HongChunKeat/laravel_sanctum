@@ -33,22 +33,25 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 
 
 ## Run in foreground
-
-- Run server: <span style='color:crimson'>`php artisan serve`</span>
-- Run cronjob: <span style='color:crimson'>`php artisan schedule:work`</span>
-- Run default queue: <span style='color:crimson'>`php artisan queue:work`</span>
-- Run specific queue: <span style='color:crimson'>`php artisan queue:work --queue=redis_multithread,redis_singlethread`</span>
+<ol>
+    <li>Run server: <span style='color:crimson'>`php artisan serve`</span></li>
+    <li>Run cronjob: <span style='color:crimson'>`php artisan schedule:work`</span></li>
+    <li>Run default queue: <span style='color:crimson'>`php artisan queue:work`</span></li>
+    <li>Run specific queue: <span style='color:crimson'>`php artisan queue:work --queue=redis_multithread,redis_singlethread`</span></li>
+</ol>
 
 ## Run in background
-
-- Run in background (without log): <span style='color:crimson'>`nohup command &> /dev/null &`</span>
-- Run in background (with log): <span style='color:crimson'>`nohup command &> logname.out &`</span>
-- Run <span style='color:crimson'>`lsof -i:8000`</span> to get the PID of the running server
-- Run <span style='color:crimson'>`kill -9 PID`</span> to kill the running server
-- Double check the content of nohup.out <span style='color:crimson'>`tail nohup.out -n 200`</span> to make sure the server is running
+<ol>
+    <li>Run in background (without log): <span style='color:crimson'>`nohup command &> /dev/null &`</span></li>
+    <li>Run in background (with log): <span style='color:crimson'>`nohup command &> logname.out &`</span></li>
+    <li>Run <span style='color:crimson'>`lsof -i:8000`</span> to get the PID of the running server</li>
+    <li>Run <span style='color:crimson'>`kill -9 PID`</span> to kill the running server</li>
+    <li>Run <span style='color:crimson'>`tail logname.out -n 200`</span> to check the log</li>
+</ol>
 
 ## Queue
-
-- even if worker down the pending queue will still be saved and will be processed when the worker start
-- by default will use default queue in <span style='color:blue'>`config/queue.php`</span>
-- set which queue to use by adding this <span style='color:blue'>`$this->onQueue('redis_multithread')`</span> in job __construct , the <span style='color:blue'>`redis_multithread`</span> is the queue name in <span style='color:blue'>`config/queue.php`</span>
+<ol>
+    <li>even if worker down the pending queue will still be saved and will be processed when the worker start</li>
+    <li>by default will use default queue in <span style='color:blue'>`config/queue.php`</span></li>
+    <li>set which queue to use by adding this <span style='color:blue'>`$this->onQueue('redis_multithread')`</span> in job __construct , the <span style='color:blue'>`redis_multithread`</span> is the queue name in <span style='color:blue'>`config/queue.php`</span></li>
+</ol>
