@@ -139,7 +139,7 @@ class Base
             ];
         }
 
-        return json_encode(HelperLogic::formatOutput($this->response));
+        return response()->json(HelperLogic::formatOutput($this->response));
     }
 
     /**
@@ -157,6 +157,6 @@ class Base
             "msg" => "jwt_error",
         ];
 
-        return json_encode(HelperLogic::formatOutput($this->response));
+        return response()->json(HelperLogic::formatOutput($this->response));
     }
 }
