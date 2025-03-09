@@ -34,24 +34,24 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 
 ## Run in foreground
 <ul>
-    <li>Run server: <span style='color:crimson'>php artisan serve</span></li>
-    <li>Run cronjob: <span style='color:crimson'>php artisan schedule:work</span></li>
-    <li>Run default queue: <span style='color:crimson'>php artisan queue:work</span></li>
-    <li>Run specific queue: <span style='color:crimson'>php artisan queue:work --queue=redis_multithread,redis_singlethread</span></li>
+    <li>Run server: <code>php artisan serve</code></li>
+    <li>Run cronjob: <code>php artisan schedule:work</code></li>
+    <li>Run default queue: <code>php artisan queue:work</code></li>
+    <li>Run specific queue: <code>php artisan queue:work --queue=redis_multithread,redis_singlethread</code></li>
 </ul>
 
 ## Run in background
 <ul>
-    <li>Run in background (without log): <span style='color:crimson'>nohup command &> /dev/null &</span></li>
-    <li>Run in background (with log): <span style='color:crimson'>nohup command &> logname.out &</span></li>
-    <li>Run <span style='color:crimson'>lsof -i:8000</span> to get the PID of the running server</li>
-    <li>Run <span style='color:crimson'>kill -9 PID</span> to kill the running server</li>
-    <li>Run <span style='color:crimson'>tail logname.out -n 200</span> to check the log</li>
+    <li>Run in background (without log): <code>nohup command &> /dev/null &</code></li>
+    <li>Run in background (with log): <code>nohup command &> logname.out &</code></li>
+    <li>Run <code>lsof -i:8000</code> to get the PID of the running server</li>
+    <li>Run <code>kill -9 PID</code> to kill the running server</li>
+    <li>Run <code>tail logname.out -n 200</code> to check the log</li>
 </ul>
 
 ## Queue
 <ul>
     <li>even if worker down the pending queue will still be saved and will be processed when the worker start</li>
-    <li>by default will use default queue in <span style='color:blue'>config/queue.php</span></li>
-    <li>set which queue to use by adding this <span style='color:blue'>$this->onQueue('redis_multithread')</span> in job __construct , the <span style='color:blue'>redis_multithread</span> is the queue name in <span style='color:blue'>config/queue.php</span></li>
+    <li>by default will use default queue in <code>config/queue.php</code></li>
+    <li>set which queue to use by adding this <code>$this->onQueue('redis_multithread')</code> in job __construct , the <code>redis_multithread</code> is the queue name in <code>config/queue.php</code></li>
 </ul>
